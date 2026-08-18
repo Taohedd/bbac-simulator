@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Loader2, AlertCircle } from 'lucide-react';
-import { useAuth } from '../hooks/useauth';
+import { useAuth } from '../hooks/useAuth';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 
 export const Login: React.FC = () => {

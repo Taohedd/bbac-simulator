@@ -2,11 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { RiskEvent } from '../types';
 
-// Built from window.location so this works through the Vite dev server proxy
-// configured in vite.config.ts ('/ws' -> ws://localhost:8000, ws: true),
-// instead of hardcoding the backend host/port. Matches the relative-path
-// approach used in api/client.ts.
+// In production (VITE_API_URL set at build time), builds an absolute
+// ws(s):// URL pointing straight at the deployed backend. In local dev
+// (no env var set), builds a relative URL from window.location so it goes
+// through the Vite dev server proxy configured in vite.config.ts
+// ('/ws' -> ws://localhost:8000, ws: true).
 const getWebSocketUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL as string | undefined;
+  if (envUrl) {
+    const wsBase = envUrl.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:');
+    return `${wsBase}/ws/stream`;
+  }
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${protocol}//${window.location.host}/ws/stream`;
 };

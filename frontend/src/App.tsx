@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useStore, selectIsAuthenticated, selectIsHydrated } from './store/useStore';
+import { useStore, selectIsAuthenticated } from './store/useStore';
 import { AppLayout } from './components/layout/AppLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Users } from './pages/Users';

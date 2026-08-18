@@ -17,10 +17,16 @@ import {
   ScenarioInfo,
 } from '../types';
 
-// Relative baseURL — requests go through the Vite dev server proxy
-// configured in vite.config.ts ('/api' -> http://localhost:8000)
+// In production (VITE_API_URL set at build time), requests go straight to
+// the deployed backend, e.g. https://bbac-simulator.onrender.com/api.
+// In local dev (no env var set), the relative '/api' path is used and
+// goes through the Vite dev server proxy configured in vite.config.ts.
+const API_BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
+
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
