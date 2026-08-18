@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { apiClient } from '../api/client';
 import { useStore, selectIsAuthenticated } from '../store/useStore';
 
 export const useAuth = () => {
@@ -22,12 +23,13 @@ export const useAuth = () => {
     try {
       // OAuth2PasswordRequestForm requires application/x-www-form-urlencoded,
       // not JSON — use URLSearchParams to build the correct body format.
-      // Use relative path so the Vite proxy forwards to http://localhost:8000.
+      // Uses apiClient so the request goes to the correct backend URL in
+      // both local dev (Vite proxy) and production (VITE_API_URL).
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await axios.post('/api/auth/login', formData, {
+      const response = await apiClient.post('/auth/login', formData, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
 
@@ -59,8 +61,8 @@ export const useAuth = () => {
       // Read token directly from store state — no subscription needed here
       const token = useStore.getState().authToken;
       if (token) {
-        await axios.post(
-          '/api/auth/logout',
+        await apiClient.post(
+          '/auth/logout',
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
